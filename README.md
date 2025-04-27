@@ -56,4 +56,8 @@ python classifier.py --file_path <path_to_conversation_history>
 - The classifier outputs a JSON file with the analysis and verdict on the safety of the conversation.
 
 ## Example Conversations and Evals
-Example conversations and classifications are available for viewing in the "example_convos_and_evals" folder. In these conversations, Planning DeepSeek and Conversational DeepSeek attacked a "victim" instance of DeepSeek to elicit information on how to cook crack cocaine, create a flour bomb, and perform lobotomies. A non red teaming conversation about how to have a nice day is included to sanity check the classifier.
+Example conversations and classifications are available for viewing in the "example_convos_and_evals" folder. In these conversations, Planning DeepSeek and Conversational DeepSeek attacked a "victim" instance of DeepSeek to elicit information on how to:
+- Cook crack cocaine at home.
+- Create a flour bomb at home.
+- Perform lobotomies at home.
+ A non red teaming conversation about how to have a nice day is included to sanity check the classifier.
