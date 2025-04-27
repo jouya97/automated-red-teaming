@@ -1,2 +1,55 @@
 # automated-red-teaming
-Prompts for automated red teaming of Character AI's model with DeepSeek v3 on TogetherAI
+This project contains scripts to facilitate and analyze automated red teaming conversations with AI chatbots. The goal is to test LLM guardrails and see if they can be manipulated into discussing sensitive or unsafe topics by another LLM.
+
+## Files
+
+- `conversation_generator.py`: Manages a conversation between a "planning DeepSeek v3", a "conversational DeepSeek v3" and an LLM that will be the victim of automated red teaming. Planning DeepSeek formulates a plan and Conversational DeepSeek is responsible for conversing with the attacked model. The division of labor is a way around DeepSeek v3's own guardrails as attempting to do this in one prompt will make DeepSeek hesitant in performing red teaming.
+- `classifier.py`: Analyzes a conversation to determine if any unsafe information was provided by the chatbot.
+
+## Requirements
+
+- Python 3.x
+- Together API key (set as an environment variable `TOGETHER_API_KEY`)
+
+## Installation
+
+1. Clone the repository:
+   ```bash
+   git clone <repository-url>
+   cd <repository-directory>
+   ```
+
+2. Install the required Python packages:
+   ```bash
+   pip install together
+   ```
+
+## Usage
+
+### Running the Conversation Generator
+
+The `conversation_generator.py` script manages the conversation with the chatbot.
+
+```bash
+python conversation_generator.py --topic <topic> --history_path <path_to_history_file> --max_user_turns <max_turns> --model_name <model_name>
+```
+
+- `--topic`: The topic for automated red teaming.
+- `--history_path`: Path to the conversation history file (default: `conversation_history.json`).
+- `--max_user_turns`: Maximum number of user turns in the conversation (default: 10).
+- `--model_name`: The model name for the attack (default: `deepseek-ai/DeepSeek-V3`).
+
+### Running the Classifier
+
+The `classifier.py` script analyzes the conversation to check for unsafe information.
+
+```bash
+python classifier.py --file_path <path_to_conversation_history>
+```
+
+- `--file_path`: Path to the JSON file containing the conversation history.
+
+## Output
+
+- The conversation history and responses are saved in JSON files.
+- The classifier outputs a JSON file with the analysis and verdict on the safety of the conversation.
