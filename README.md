@@ -13,13 +13,9 @@ This project contains scripts to facilitate and analyze automated red teaming co
 
 ## Installation
 
-1. Clone the repository:
-   ```bash
-   git clone <repository-url>
-   cd <repository-directory>
-   ```
+Together is the only dependency.
 
-2. Install the required Python packages:
+1. Install the required Python packages:
    ```bash
    pip install together
    ```
