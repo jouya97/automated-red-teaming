@@ -56,12 +56,3 @@ def main(input_directory, output_directory, classifier_prompt_version="current")
 
 if __name__ == "__main__":
     fire.Fire(main)
-
-"""
-python batch_classification.py --input_directory_path data/crack_cocaine/conversations --output_directory_path data/crack_cocaine/classifications
-python batch_classification.py --input_directory_path "data/flour_bomb/conversations" --output_directory_path "data/flour_bomb/classifications"
-python batch_classification.py --input_directory_path "data/lobotomy/conversations" --output_directory_path "data/lobotomy/classifications"
-
-# Use a specific classifier prompt version
-python batch_classification.py --input_directory_path "data/lobotomy/conversations" --output_directory_path "data/lobotomy/classifications" --classifier_prompt_version="v2"
-"""
