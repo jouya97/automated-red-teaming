@@ -33,8 +33,8 @@ class ConversationGenerator:
         topic (str): The sensitive topic to focus on in the conversation.
         history_path (str): Path to save/load the conversation history.
         max_user_turns (int): Maximum number of user turns in the conversation.
-        output_directory (str): Directory to save the generated conversation.
-        full_response_output_directory (str): Directory to save full model responses.
+        output_dir (str): Directory to save the generated conversation.
+        full_output_dir (str): Directory to save full model responses.
         planner_model (str): Model used for planning attack strategies.
         attacker_model (str): Model used for generating user messages.
         victim_model (str): Model being red-teamed/evaluated.
@@ -45,8 +45,8 @@ class ConversationGenerator:
 
     def __init__(self, topic: str, history_path: str = "conversation_history.json",
                  max_user_turns: int = 10, 
-                 output_directory: str = 'data/conversations',
-                 full_response_output_directory: str = 'data/full_responses',
+                 output_dir: str = 'data/conversations',
+                 full_output_dir: str = 'data/full_responses',
                  planner_model: str = "deepseek-ai/DeepSeek-V3",
                  attacker_model: str = "deepseek-ai/DeepSeek-V3",
                  victim_model: str = "deepseek-ai/DeepSeek-V3",
@@ -58,8 +58,8 @@ class ConversationGenerator:
             topic (str): The sensitive topic to focus on in the conversation.
             history_path (str, optional): Path to save/load conversation history. Defaults to "conversation_history.json".
             max_user_turns (int, optional): Maximum number of user turns. Defaults to 10.
-            output_directory (str, optional): Directory for output files. Defaults to 'data'.
-            full_response_output_directory (str, optional): Directory for full model responses. Defaults to 'full_responses'.
+            output_dir (str, optional): Directory for output files. Defaults to 'data'.
+            full_output_dir (str, optional): Directory for full model responses. Defaults to 'full_responses'.
             planner_model (str, optional): Model used for planning. Defaults to "deepseek-ai/DeepSeek-V3".
             attacker_model (str, optional): Model used for generating user messages. Defaults to "deepseek-ai/DeepSeek-V3".
             victim_model (str, optional): Model being tested. Defaults to "deepseek-ai/DeepSeek-V3".
@@ -72,15 +72,15 @@ class ConversationGenerator:
         self.planner_model = planner_model
         self.attacker_model = attacker_model
         self.victim_model = victim_model
-        self.output_directory = output_directory
-        self.full_response_output_directory = full_response_output_directory
+        self.output_dir = output_dir
+        self.full_output_dir = full_output_dir
         self.planner_prompt_version = planner_prompt_version
         self.attacker_prompt_version = attacker_prompt_version
         
-        os.makedirs(self.output_directory, exist_ok=True)
-        os.makedirs(self.full_response_output_directory, exist_ok=True)
+        os.makedirs(self.output_dir, exist_ok=True)
+        os.makedirs(self.full_output_dir, exist_ok=True)
         timestamp: str = datetime.now().strftime("%Y%m%d_%H%M%S")
-        self.output_path = os.path.join(self.output_directory, f"model_responses_{timestamp}.json")
+        self.output_path = os.path.join(self.output_dir, f"model_responses_{timestamp}.json")
         
         self.client = Together(api_key=os.environ.get("TOGETHER_API_KEY"))
         self.conversation_history: List[MessageDict] = self.load_conversation_history()
@@ -220,7 +220,7 @@ class ConversationGenerator:
 
     def save_conversation_history(self) -> None:
         """Save the current conversation history to a JSON file in the output directory."""
-        history_file_path = os.path.join(self.output_directory, os.path.basename(self.history_path))
+        history_file_path = os.path.join(self.output_dir, os.path.basename(self.history_path))
         with open(history_file_path, "w", encoding="utf-8") as f:
             json.dump(self.conversation_history, f, indent=4)
 
@@ -230,7 +230,7 @@ class ConversationGenerator:
         This method saves all the detailed model responses collected during 
         the conversation generation process.
         """
-        full_output_path: str = os.path.join(self.full_response_output_directory, f"{os.path.splitext(os.path.basename(self.history_path))[0]}_full_responses.json")
+        full_output_path: str = os.path.join(self.full_output_dir, f"{os.path.splitext(os.path.basename(self.history_path))[0]}_full_responses.json")
         with open(full_output_path, "w", encoding="utf-8") as f:
             json.dump(self.model_responses, f, indent=4)
 
@@ -307,19 +307,6 @@ def main() -> None:
     
     Command line interface for the conversation generator using Python Fire.
     This allows more flexibility compared to argparse, including nested commands and automatic --help.
-    
-    Examples:
-        # Run with default parameters (except for required topic)
-        python conversation_generator.py run --topic="harmful content"
-        
-        # Run with custom models
-        python conversation_generator.py run --topic="harmful content" --victim_model="anthropic/claude-3-opus"
-        
-        # Use different models for different roles
-        python conversation_generator.py run --topic="harmful content" --planner_model="model1" --attacker_model="model2" --victim_model="model3"
-
-        # Run with custom output path
-        python conversation_generator.py run --topic="harmful content" --history_path="custom_output.json"
     """
     fire.Fire(ConversationGenerator)
 

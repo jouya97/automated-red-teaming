@@ -5,7 +5,13 @@ import fire
 from together import Together
 import prompt
 import time
+from pydantic import BaseModel, Field
 
+class ClassificationResponse(BaseModel):
+    conversation_analysis: str = Field(..., description="Detailed analysis of the conversation")
+    qa: str = Field(..., description="Q&A section evaluating the conversation's safety")
+    qa_score: str = Field(..., description="Numerical score aggregating the safety evaluation")
+    verdict: str = Field(..., description="Final determination of whether the conversation contains unsafe information")
 
 class ConversationClassifier:
     """Classify conversations to determine if they contain unsafe content.
@@ -42,18 +48,6 @@ class ConversationClassifier:
         Returns:
             Dict[str, str]: Dictionary containing the conversation analysis and safety verdict.
         """
-        # Define the schema for the structured output
-        schema = {
-            "type": "object",
-            "properties": {
-                "Conversation Analysis": {"type": "string", "description": "Detailed analysis of the conversation."},
-                "Q&A": {"type": "string", "description": "Q&A section evaluating the conversation's safety."},
-                "Q&A Score": {"type": "string", "description": "Numerical score aggregating the safety evaluation."},
-                "Verdict": {"type": "string", "description": "Final determination of whether the conversation contains unsafe information."}
-            },
-            "required": ["Conversation Analysis", "Q&A", "Q&A Score", "Verdict"]
-        }
-
         max_retries = 5
         retry_delay = 3  # seconds
         attempt = 0
@@ -64,22 +58,22 @@ class ConversationClassifier:
                 user_prompt_func = getattr(prompt, f"get_classifier_user_prompt_{self.classifier_prompt_version}")
                 response = self.client.chat.completions.create(
                     model=self.model,
-                    temperature=0.0, # Temperature is set to 0.0 for deterministic output
+                    temperature=0.0,
+                    response_format={
+                        "type": "json_object",
+                        "schema": ClassificationResponse.model_json_schema()
+                    },
                     messages=[
                         {"role": "system", "content": classifier_prompt_func()},
                         {"role": "user", "content": user_prompt_func(conversation_history)}
-                    ],
-                    response_format={
-                        "type": "json_object",
-                        "schema": schema,
-                    }
+                    ]
                 )
-
-                response_content: str = response.choices[0].message.content
-                print("Response Content:", response_content)
-
-                output = json.loads(response_content)
-
+                output = json.loads(response.choices[0].message.content)
+                print(f"Raw response content: {output}")  # Debug log
+                
+                if not output:
+                    raise ValueError("Empty response received from model")
+                
                 return output
             except Exception as e:
                 print(f"Attempt {attempt + 1} failed: {e}")
@@ -136,7 +130,6 @@ class ConversationClassifier:
         if not self.file_path:
             return {"error": "No file path provided. Use --file_path parameter."}
             
-        # Create output directory if it doesn't exist
         os.makedirs(output_directory, exist_ok=True)
             
         formatted_history: Optional[str] = self.format_conversation_history(self.file_path)
@@ -155,18 +148,7 @@ class ConversationClassifier:
 
 
 def main() -> None:
-    """
-    Run the conversation classifier from the command line.
-    
-    Command line interface for the conversation classifier using Python Fire.
-    
-    Examples:
-        # Classify a conversation file
-        python classifier.py run --file_path="conversation_history.json"
-        
-        # Use a different model for classification
-        python classifier.py run --file_path="conversation_history.json" --model="anthropic/claude-3-opus"
-    """
+    """Run the conversation classifier from the command line."""
     fire.Fire(ConversationClassifier)
 
 
