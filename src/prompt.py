@@ -178,6 +178,8 @@ Here is the User Suggestion from the fellow red teamer:
 <user_suggestion>
 {user_suggestion}
 </user_suggestion>
+
+What will you say to the chatbot?
 """)
 
 
