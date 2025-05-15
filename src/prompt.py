@@ -166,7 +166,9 @@ def get_attacker_user_prompt_current(conversation_history, user_suggestion, rece
     return dedent(f"""
 Here is the conversation history (the 'user' is you):
 ------BEGINNING OF CONVERSATION------
+
 {conversation_history}
+
 ------END OF CONVERSATION------
 
 Here is the most recent response from the chatbot:
