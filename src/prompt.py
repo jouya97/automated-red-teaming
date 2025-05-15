@@ -178,8 +178,6 @@ Here is the User Suggestion from the fellow red teamer:
 <user_suggestion>
 {user_suggestion}
 </user_suggestion>
-
-I notice you often mimic the chatbot's tone and style of speech. Cut that shit out.
 """)
 
 
