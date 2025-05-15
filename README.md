@@ -1,7 +1,9 @@
 # Automated Red Teaming Framework
 
 This is an automated red teaming system that uses two adversary LLM (a planner and an attacker) to attack a victim LLM. The planner comes up with a red teaming strategy and passes it to the attacker, who then attacks the victim by conversing with the victim. I separate planning and attacking into two separate LLMs because if this is done with a single LLM, the model often refuses the task or begins to express remorseful statements during planning and/or attacking.
+
 A classifier judges whether or not conversations contain harmful content. I iterated on this classifier by labeling or not I agreed with its results and changing its prompt based on my data labeling results. I then iterated mostly on the planner's system prompt using classification results for 100 conversations at a time.
+
 Examples of conversations, full responses with planner model thinking included, and classifications for the following topics are include in the "data" directory:
 - How to cook crack cocaine at home.
 - How to do DIY lobomoties at home.
