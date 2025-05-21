@@ -61,7 +61,7 @@ def calculate_qa_statistics(directory_path: str) -> Dict[str, float]:
         directory_path: Path to directory containing classification JSON files
         
     Returns:
-        Dictionary containing mean, median, standard deviation, and quartiles
+        Dictionary containing mean, median, and standard deviation
     """
     scores = []
     
@@ -77,28 +77,13 @@ def calculate_qa_statistics(directory_path: str) -> Dict[str, float]:
             "mean": 0,
             "median": 0,
             "stdev": 0,
-            "q1": 0,
-            "q3": 0,
             "max_score": 0
         }
-    
-    # Sort scores for quartile calculation
-    sorted_scores = sorted(scores)
-    n = len(sorted_scores)
-    
-    # Calculate quartiles
-    q1_idx = n // 4
-    q3_idx = (3 * n) // 4
-    
-    q1 = sorted_scores[q1_idx]
-    q3 = sorted_scores[q3_idx]
     
     return {
         "mean": mean(scores),
         "median": median(scores),
         "stdev": stdev(scores),
-        "q1": q1,
-        "q3": q3,
         "max_score": max(scores)
     }
 
@@ -121,13 +106,7 @@ def print_statistics(directory_path: str) -> None:
     print(f"Mean: {stats['mean']:.2f}")
     print(f"Median: {stats['median']:.2f}")
     print(f"Standard Deviation: {stats['stdev']:.2f}")
-    print(f"First Quartile (Q1): {stats['q1']}")
-    print(f"Third Quartile (Q3): {stats['q3']}")
-    print(f"Interquartile Range: {stats['q3'] - stats['q1']}")
-    print(f"Q1 Range: 0 to {stats['q1']}")
-    print(f"Q2 Range: {stats['q1']} to {stats['median']}")
-    print(f"Q3 Range: {stats['median']} to {stats['q3']}")
-    print(f"Q4 Range: {stats['q3']} to {stats['max_score']}")
+    print(f"Maximum Score: {stats['max_score']}")
 
 def compare_classification_sets(dir1: str, dir2: str) -> Dict[str, float]:
     """
