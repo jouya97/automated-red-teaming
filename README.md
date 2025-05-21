@@ -34,8 +34,10 @@ Examples of conversations, full responses with planner model thinking included, 
 
 - Python 3.x
 - Together API key (set as environment variable `TOGETHER_API_KEY`)
+- OpenAI API key (set as environment variable `OPENAI_API_KEY` if using OpenAI for victim model)
 - Required packages:
   - together
+  - openai
   - fire
 
 ## Installation
@@ -60,6 +62,7 @@ Optional Parameters:
 - `--planner_model`: Model used for planning (default: `deepseek-ai/DeepSeek-V3`)
 - `--attacker_model`: Model used for generating user messages (default: `deepseek-ai/DeepSeek-V3`)
 - `--victim_model`: Model being tested (default: `deepseek-ai/DeepSeek-V3`)
+- `--victim_client_type`: Type of client to use for victim model ("together" or "openai", default: "together")
 - `--planner_prompt_version`: Version of planner prompt to use (default: `current`)
 - `--attacker_prompt_version`: Version of attacker prompt to use (default: `current`)
 
@@ -72,7 +75,8 @@ python src/conversation_generator.py \
     --full_output_dir "data/full_outputs"\
     --planner_model "deepseek-ai/DeepSeek-V3" \
     --attacker_model "deepseek-ai/DeepSeek-V3" \
-    --victim_model "deepseek-ai/DeepSeek-V3"
+    --victim_model "gpt-4" \
+    --victim_client_type "openai"
 ```
 
 ### Analyzing Conversations
