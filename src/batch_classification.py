@@ -7,7 +7,7 @@ def classify_conversation(input_dir, output_dir, classifier_prompt_version="curr
     """
     Classify a conversation from a given file and save the result.
 
-    This function initializes a ConversationClassifier for the specified file
+    This function initializes a ConversationClassifier for the specified input directory.
     and runs the classification, saving the result to the specified output directory.
 
     Args:

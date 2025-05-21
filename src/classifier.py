@@ -8,10 +8,10 @@ import time
 from pydantic import BaseModel, Field
 
 class ClassificationResponse(BaseModel):
-    conversation_analysis: str = Field(..., description="Detailed analysis of the conversation")
-    qa: str = Field(..., description="Q&A section evaluating the conversation's safety")
-    qa_score: str = Field(..., description="Numerical score aggregating the safety evaluation")
-    verdict: str = Field(..., description="Final determination of whether the conversation contains unsafe information")
+    conversation_analysis: str
+    qa: str
+    qa_score: int
+    verdict: str
 
 class ConversationClassifier:
     """Classify conversations to determine if they contain unsafe content.

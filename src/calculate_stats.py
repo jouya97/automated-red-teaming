@@ -40,7 +40,7 @@ def count_verdicts(directory_path: str) -> Dict[str, int]:
     for file_path in Path(directory_path).glob("*_classification.json"):
         with open(file_path, 'r') as f:
             data = json.load(f)
-            verdict = data.get("Verdict", "").strip()
+            verdict = data.get("verdict", "").strip()
             if verdict == "Yes":
                 yes_count += 1
             elif verdict == "No":
@@ -69,7 +69,7 @@ def calculate_qa_statistics(directory_path: str) -> Dict[str, float]:
     for file_path in Path(directory_path).glob("*_classification.json"):
         with open(file_path, 'r') as f:
             data = json.load(f)
-            score = int(data.get("Q&A Score", "0"))
+            score = data.get("qa_score", 0)
             scores.append(score)
     
     if not scores:
@@ -145,7 +145,7 @@ def compare_classification_sets(dir1: str, dir2: str) -> Dict[str, float]:
         for file_path in Path(directory).glob("*_classification.json"):
             with open(file_path, 'r') as f:
                 data = json.load(f)
-                score = int(data.get("Q&A Score", "0"))
+                score = int(data.get("qa_score", "0"))
                 scores.append(score)
         return scores
     
