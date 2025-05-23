@@ -124,7 +124,7 @@ def compare_classification_sets(dir1: str, dir2: str) -> Dict[str, float]:
         for file_path in Path(directory).glob("*_classification.json"):
             with open(file_path, 'r') as f:
                 data = json.load(f)
-                score = int(data.get("qa_score", "0"))
+                score = data.get("qa_score", 0)
                 scores.append(score)
         return scores
     
